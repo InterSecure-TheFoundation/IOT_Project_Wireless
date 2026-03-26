@@ -1,0 +1,16 @@
+{
+  "name": "iot-honeypot-simulator",
+  "version": "1.0.0",
+  "description": "IoT honeypot device simulator — publishes fake log entries to MQTT",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev":   "nodemon index.js"
+  },
+  "dependencies": {
+    "mqtt": "^5.3.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

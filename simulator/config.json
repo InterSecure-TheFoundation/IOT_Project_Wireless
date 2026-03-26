@@ -1,0 +1,18 @@
+{
+    "mqtt": {
+        "brokerUrl": "mqtt://localhost:1883",
+        "topic": "honeypot/logs",
+        "username": "",
+        "password": "",
+        "qos": 1
+    },
+    "schedule": {
+        "burstEveryMs": 3000,
+        "logsPerBurst": 3,
+        "delayBetweenLogsMs": 300
+    },
+    "simulation": {
+        "randomizeTimestamp": true,
+        "timezone": "+0000"
+    }
+}

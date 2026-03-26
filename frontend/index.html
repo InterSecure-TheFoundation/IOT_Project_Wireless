@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Honeypot Logs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <div class="header-left">
+        <div class="logo">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+        </div>
+        <h1>Honeypot Logs</h1>
+    </div>
+    <span id="ws-status" class="badge disconnected">
+        <span class="badge-dot"></span>
+        Disconnected
+    </span>
+</header>
+
+<main>
+
+    <!-- Control bar -->
+    <section id="controls">
+        <div class="mode-buttons">
+            <button id="btn-raw"   class="mode-btn active">Raw</button>
+            <button id="btn-table" class="mode-btn">Table</button>
+        </div>
+
+        <div class="divider-v"></div>
+
+        <button id="btn-toggle-filters" class="icon-btn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            Filters
+            <span id="filter-count" class="count-badge hidden">0</span>
+        </button>
+
+        <button id="btn-toggle-columns" class="icon-btn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="18"/><rect x="14" y="3" width="7" height="18"/></svg>
+            Columns
+        </button>
+    </section>
+
+    <!-- Filter panel -->
+    <section id="filter-panel" class="panel hidden">
+        <div class="panel-header">
+            <span class="panel-title">Filters</span>
+            <button id="btn-clear-filters" class="ghost-sm">Clear all</button>
+        </div>
+        <div id="filter-fields"></div>
+        <div class="panel-actions">
+            <button id="btn-apply-filters" class="primary">Apply</button>
+        </div>
+    </section>
+
+    <!-- Column selector panel -->
+    <section id="column-panel" class="panel hidden">
+        <div class="panel-header">
+            <span class="panel-title">Visible Columns</span>
+        </div>
+        <div id="column-checkboxes"></div>
+    </section>
+
+    <!-- Log display -->
+    <section id="log-container">
+        <div id="view-raw"></div>
+        <div id="view-table" class="hidden">
+            <table>
+                <thead><tr id="table-header-row"></tr></thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+        <div id="empty-state" class="hidden">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <p>No logs to display</p>
+        </div>
+    </section>
+
+    <!-- Pagination -->
+    <section id="pagination">
+        <button id="btn-prev" disabled>← Prev</button>
+        <span id="page-info">—</span>
+        <button id="btn-next" disabled>Next →</button>
+    </section>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
