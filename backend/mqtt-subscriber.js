@@ -3,6 +3,7 @@ const config           = require('./config');
 const { parseLogLine } = require('./log-parser');
 const { insertLog }    = require('./db');
 const { broadcast }    = require('./websocket-server');
+const { analyze }      = require('./analyzer');
 
 function startMqttSubscriber() {
     const clientOptions = {
@@ -36,6 +37,16 @@ function startMqttSubscriber() {
             const info = insertLog(raw, {});
             broadcast({ type: 'log', data: { id: info.lastInsertRowid, raw, parsed: null, created_at: Date.now() } });
             return;
+        }
+
+        // All suspicious analysis is done by the backend analyzer
+        const { suspicious, reasons } = analyze(parsed);
+
+        parsed.suspicious = suspicious ? 1 : 0;
+        parsed.sus_reason = reasons.length > 0 ? reasons.slice(0, 5).join('; ') : null;
+
+        if (suspicious) {
+            console.log(`[ANALYZER] SUSPICIOUS ip=${parsed.ip} path=${parsed.path} reasons=${parsed.sus_reason}`);
         }
 
         const info   = insertLog(raw, parsed);

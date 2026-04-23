@@ -26,25 +26,31 @@ function createSchema() {
             status_code  INTEGER,
             bytes        INTEGER,
             user_agent   TEXT,
+            suspicious   INTEGER DEFAULT 0,
+            sus_reason   TEXT,
             created_at   INTEGER NOT NULL
         );
         CREATE INDEX IF NOT EXISTS idx_logs_ip          ON logs(ip);
         CREATE INDEX IF NOT EXISTS idx_logs_status_code ON logs(status_code);
         CREATE INDEX IF NOT EXISTS idx_logs_method      ON logs(method);
         CREATE INDEX IF NOT EXISTS idx_logs_created_at  ON logs(created_at);
+        CREATE INDEX IF NOT EXISTS idx_logs_suspicious  ON logs(suspicious);
     `);
+    // Migrate existing DB: add columns added after initial release
+    try { db.exec(`ALTER TABLE logs ADD COLUMN suspicious INTEGER DEFAULT 0`); } catch (_) {}
+    try { db.exec(`ALTER TABLE logs ADD COLUMN sus_reason TEXT`);              } catch (_) {}
 }
 
 const ALLOWED_FILTERS = new Set([
-    'ip', 'method', 'path', 'http_version', 'status_code', 'bytes', 'user_agent',
+    'ip', 'method', 'path', 'http_version', 'status_code', 'bytes', 'user_agent', 'suspicious',
 ]);
 
-const NUMERIC_FIELDS = new Set(['status_code', 'bytes']);
+const NUMERIC_FIELDS = new Set(['status_code', 'bytes', 'suspicious']);
 
 function insertLog(raw, parsed) {
     const stmt = getDb().prepare(`
-        INSERT INTO logs (raw, ip, timestamp, method, path, http_version, status_code, bytes, user_agent, created_at)
-        VALUES (@raw, @ip, @timestamp, @method, @path, @http_version, @status_code, @bytes, @user_agent, @created_at)
+        INSERT INTO logs (raw, ip, timestamp, method, path, http_version, status_code, bytes, user_agent, suspicious, sus_reason, created_at)
+        VALUES (@raw, @ip, @timestamp, @method, @path, @http_version, @status_code, @bytes, @user_agent, @suspicious, @sus_reason, @created_at)
     `);
     return stmt.run({
         raw,
@@ -56,6 +62,8 @@ function insertLog(raw, parsed) {
         status_code:  parsed.status_code  ?? null,
         bytes:        parsed.bytes        ?? null,
         user_agent:   parsed.user_agent   ?? null,
+        suspicious:   parsed.suspicious   ?? 0,
+        sus_reason:   parsed.sus_reason   ?? null,
         created_at:   Date.now(),
     });
 }

@@ -473,6 +473,18 @@ tbody tr.new td   { animation: hl 0.9s ease-out; }
 .status-4xx { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
 .status-5xx { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; font-weight: 600; }
 
+/* Suspicious badges */
+.sus-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 11.5px;
+}
+
+.sus-yes { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; font-weight: 600; }
+.sus-no  { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+
 /* Empty state */
 #empty-state {
     display: flex;

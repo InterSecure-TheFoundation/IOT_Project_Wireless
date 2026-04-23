@@ -2,7 +2,7 @@
 // STATE
 // filters: { field: ['val1', 'val2', ...] }  ← OR within field, AND between fields
 // ============================================================
-const DEFAULT_COLUMNS = ['ip', 'timestamp', 'method', 'path', 'http_version', 'status_code', 'bytes', 'user_agent'];
+const DEFAULT_COLUMNS = ['ip', 'timestamp', 'method', 'path', 'http_version', 'status_code', 'bytes', 'user_agent', 'suspicious'];
 
 const state = {
     mode:           'raw',
@@ -171,6 +171,16 @@ function createTableRow(log, isNew) {
             pill.textContent = log.status_code;
             pill.className   = 'status-pill ' + statusClass(log.status_code);
             td.appendChild(pill);
+        } else if (col === 'suspicious') {
+            const pill = document.createElement('span');
+            const isSus = log.suspicious === 1 || log.suspicious === true;
+            pill.textContent = isSus ? 'Suspicious' : 'Safe';
+            pill.className   = isSus ? 'sus-pill sus-yes' : 'sus-pill sus-no';
+            if (log.sus_reason) {
+                pill.title = log.sus_reason.replace(/;\s*/g, '\n');
+                td.title   = '';   // clear the outer td title so pill title takes over
+            }
+            td.appendChild(pill);
         } else {
             td.textContent = log[col] ?? '-';
         }
@@ -324,7 +334,7 @@ function hasActiveFilters() {
 // Mirror the backend filter logic on the frontend so live WS logs are filtered too.
 // OR within a field's tags, AND between different fields.
 // Numeric fields (status_code, bytes) use exact match; others use case-insensitive contains.
-const NUMERIC_FILTER_FIELDS = new Set(['status_code', 'bytes']);
+const NUMERIC_FILTER_FIELDS = new Set(['status_code', 'bytes', 'suspicious']);
 
 function matchesFilters(log) {
     for (const [field, values] of Object.entries(state.filters)) {

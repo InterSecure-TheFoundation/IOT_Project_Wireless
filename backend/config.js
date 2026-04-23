@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 module.exports = {
-    mqttBrokerUrl: process.env.MQTT_BROKER_URL || 'mqtt://localhost:1883',
+    mqttBrokerUrl: process.env.MQTT_BROKER_URL || 'mqtt://10.30.84.56:1883',
     mqttTopic:     process.env.MQTT_TOPIC      || 'honeypot/logs',
     mqttUsername:  process.env.MQTT_USERNAME   || '',
     mqttPassword:  process.env.MQTT_PASSWORD   || '',
